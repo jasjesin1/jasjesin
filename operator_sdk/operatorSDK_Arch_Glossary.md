@@ -15,8 +15,7 @@
 - <font style="color:dodgerblue"><b>scaffold</b></font> -- process & tools that generate initial project structure, including integration boilerplate code
 - <font style="color:mediumseagreen"><b>Markers</b></font> -- acts as extra metadata, telling [controller-tools](https://github.com/kubernetes-sigs/controller-tools) _(our code and YAML generator)_ extra information
 
-
-![[kubeBuilder_Architecture 1.png]]
+![kubeBuilder_Architecture](https://github.com/user-attachments/assets/e66fa8a9-43ee-4718-808e-58a1e26115c0)
 **kubeBuilder Architecture:**
 
 - every functional object needs to contain a spec & a status; spec holds desired state, so any inputs to ctrller go here
