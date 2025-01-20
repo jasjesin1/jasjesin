@@ -1,5 +1,5 @@
-- <font style="color:green"><b>operator</b></font> -- considered as client to API svr, to run ctrller to reconcile state of custom stateful apps, wid help of CR
-- <font style="color:red"><b>Process main.go</b></font> -- main entrypoint, that is executed to instantiate mgr
+- <span style="color: green;"><b>operator</b></span> -- considered as client to API svr, to run ctrller to reconcile state of custom stateful apps, wid help of CR
+- <span style="color: red;"><b>Process main.go</b></span> -- main entrypoint, that is executed to instantiate mgr
 - <font style="color:orange"><b>Manager</b></font> -- orchestrates everything for us, by launching pods for ctrllers, clients, caches & webhooks; and monitoring these
 - <font style="color:magenta"><b>client</b></font> -- help access k8s API objects by taking care of authentication & protocols
 - <font style="color:violet"><b>cache</b></font> -- store recent requests for objects, by ctrllers n webhooks; used by client for faster txn
