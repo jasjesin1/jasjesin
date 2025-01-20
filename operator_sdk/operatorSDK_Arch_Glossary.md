@@ -3,7 +3,7 @@
 - <font style="color:orange"><b>Manager</b></font>: orchestrates everything for us, by launching pods for ctrllers, clients, caches & webhooks; and monitoring these
 - <font style="color:magenta"><b>client</b></font>: help access k8s API objects by taking care of authentication & protocols
 - <font style="color:violet"><b>cache</b></font>: store recent requests for objects, by ctrllers n webhooks; used by client for faster txn
-- <font style="color:purple"><b>controller</b></font>: contain actual business logic & use predicates to filter events (with event src & handler) for triggering reconcile requests
+- <font style="color:purple"><b>controller</b></font>: contain actual business logic & use predicates to filter events _(with event src & handler)_ for triggering reconcile requests
 - <font style="color:gold"><b>event src & handler</b></font>: **event src** watches for k8s API object changes; 
 	- **event handler** processes event like queuing up event request for object owner
 - <font style="color:teal"><b>predicate</b></font>: filter out which events to consider for reconciliation
