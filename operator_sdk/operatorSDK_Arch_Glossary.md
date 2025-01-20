@@ -25,6 +25,7 @@
 - <font style="color:dodgerblue"><b>scaffold</b></font>: process & tools that generate initial project structure, including integration boilerplate code
 - <font style="color:mediumseagreen"><b>Markers</b></font>: acts as extra metadata, telling [controller-tools](https://github.com/kubernetes-sigs/controller-tools) _(our code and YAML generator)_ extra information
 
+---
 - every functional object needs to contain a spec & a status; spec holds desired state, so any inputs to ctrller go here
 - Any new fields you add must have json tags for the fields to be serialized.
 - We can also use the `omitempty` struct tag to mark that a field should be omitted from serialization when empty
