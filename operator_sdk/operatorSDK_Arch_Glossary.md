@@ -18,17 +18,17 @@
 - <font style="color:yellow"><b>scheme</b></font>: provides mappings b/w kinds & associated Go-types, to ctrller
 - <font style="color:slateblue"><b>types</b></font>: contain schema of inputs to be provided via CR, for constructing a CRD
 - <font style="color:brown"><b>event recorders</b></font>: emit events using mgr
+- <font style="color:mediumseagreen"><b>Markers</b></font>: acts as extra metadata, telling [controller-tools](https://github.com/kubernetes-sigs/controller-tools) _(our code and YAML generator)_ extra information
+- <font style="color:dodgerblue"><b>scaffold</b></font>: process & tools that generate initial project structure, including integration boilerplate code
 - <font style="color:Tomato"><b>boilerplate</b></font>: foundational template that provides 
 	- pre-defined set of files wid necessary structure, 
 	- reusable code patterns & 
 	- configurations, as a quick start base for building k8s operators, wid minimal changes; that follows best practices
-- <font style="color:dodgerblue"><b>scaffold</b></font>: process & tools that generate initial project structure, including integration boilerplate code
-- <font style="color:mediumseagreen"><b>Markers</b></font>: acts as extra metadata, telling [controller-tools](https://github.com/kubernetes-sigs/controller-tools) _(our code and YAML generator)_ extra information
 
 ---
 - every functional object needs to contain a spec & a status; spec holds desired state, so any inputs to ctrller go here
+	- design our status to hold observed state; this contains info tht we want our users or other ctrllers to obtain
 - Any new fields you add must have json tags for the fields to be serialized.
-- We can also use the `omitempty` struct tag to mark that a field should be omitted from serialization when empty
-- design our status to hold observed state; this contains info tht we want our users or other ctrllers to obtain
-- use `metav1.Time` instead of `time.Time` to get the stable serialization
+	- We can also use the `omitempty` struct tag to mark that a field should be omitted from serialization when empty
+	- use `metav1.Time` instead of `time.Time` to get the stable serialization
 
