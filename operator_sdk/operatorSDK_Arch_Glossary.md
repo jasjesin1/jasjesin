@@ -8,15 +8,16 @@
 - <font style="color:teal"><b>predicate</b></font> -- filter out which events to consider for reconciliation
 - <font style="color:pink"><b>reconciler</b></font> -- implements a fn tht takes reconcile request, containing name & ns of object to reconcile; reconciles object, if needed & returns response
 
+![kubeBuilder_Architecture](https://github.com/user-attachments/assets/e66fa8a9-43ee-4718-808e-58a1e26115c0)
+**kubeBuilder Architecture:**
+
+---
 - <font style="color:yellow"><b>scheme</b></font> -- provides mappings b/w kinds & associated Go-types, to ctrller
 - <font style="color:slateblue"><b>types</b></font> -- contain schema of inputs to be provided via CR, for constructing a CRD
 - <font style="color:brown"><b>event recorders</b></font> -- emit events using mgr
 - <font style="color:Tomato"><b>boilerplate</b></font> -- foundational template that provides pre-defined set of files wid necessary structure, reusable code patters & configurations as a quick start base for building k8s operators, wid minimal changes; that follows best practices
 - <font style="color:dodgerblue"><b>scaffold</b></font> -- process & tools that generate initial project structure, including integration boilerplate code
 - <font style="color:mediumseagreen"><b>Markers</b></font> -- acts as extra metadata, telling [controller-tools](https://github.com/kubernetes-sigs/controller-tools) _(our code and YAML generator)_ extra information
-
-![kubeBuilder_Architecture](https://github.com/user-attachments/assets/e66fa8a9-43ee-4718-808e-58a1e26115c0)
-**kubeBuilder Architecture:**
 
 - every functional object needs to contain a spec & a status; spec holds desired state, so any inputs to ctrller go here
 - Any new fields you add must have json tags for the fields to be serialized.
