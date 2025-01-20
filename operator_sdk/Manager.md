@@ -1,4 +1,4 @@
-**Manager** 
+
 - instantiate a [_manager_](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/manager?tab=doc#Manager), which keeps track of 
 	- running all of our controllers, as well as 
 	- setting up shared caches and clients to the API server _(notice we tell the manager about our Scheme)_
