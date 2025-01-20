@@ -1,0 +1,81 @@
+**Deploying/Running a Controller**
+- If any changes are made to the API definitions, then before proceeding, 
+	- generate the manifests like CRs or CRDs with
+```bash
+make manifests
+```
+- To test out the controller, 
+	- we can run it locally against the cluster
+- Before we do so, though, we’ll need to install our CRDs, as per the [quick start](https://book.kubebuilder.io/quick-start)
+	- This will automatically update the YAML manifests using controller-tools, if needed:
+```bash
+make install
+```
+- running the controller against our cluster will use whatever credentials that we connect to the cluster with, so we don’t need to worry about RBAC just yet
+
+# [Running webhooks locally](https://book.kubebuilder.io/cronjob-tutorial/running#running-webhooks-locally)
+- to run the webhooks locally, 
+	- generate certificates for serving the webhooks, and 
+	- place them in the right directory (`/tmp/k8s-webhook-server/serving-certs/tls.{crt,key}`, by default)
+- If you’re not running a local API server, 
+	- you’ll also need to figure out how to proxy traffic from the remote cluster to your local webhook server. 
+	- For this reason, we generally recommend disabling webhooks when doing your local code-run-test cycle
+- In a separate terminal, run
+```bash
+export ENABLE_WEBHOOKS=false make run
+```
+- see logs from the controller about starting up, but it won’t do anything just yet
+- At this point, we need a CronJob to test with
+	- Let’s write a sample to `config/samples/batch_v1_cronjob.yaml`, and use that:
+```yaml
+apiVersion: batch.tutorial.kubebuilder.io/v1
+kind: CronJob
+metadata:
+  labels:
+    app.kubernetes.io/name: project
+    app.kubernetes.io/managed-by: kustomize
+  name: cronjob-sample
+spec:
+  schedule: "*/1 * * * *"
+  startingDeadlineSeconds: 60
+  concurrencyPolicy: Allow # explicitly specify, but Allow is also default.
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure
+```
+  
+```bash
+kubectl create -f config/samples/batch_v1_cronjob.yaml
+```
+- Look for your cronjob running, and updating status:
+```bash
+kubectl get cronjob.batch.tutorial.kubebuilder.io -o yaml kubectl get job
+```
+- Now that we know it’s working, we can run it in the cluster
+	- Stop the `make run` invocation, and run
+```bash
+make docker-build docker-push IMG=<some-registry>/<project-name>:tag make deploy IMG=<some-registry>/<project-name>:tag
+```
+# [Registry Permission](https://book.kubebuilder.io/cronjob-tutorial/running#registry-permission)
+- Consider incorporating Kind into your workflow for a faster, more efficient local development and CI experience
+	- if you’re using a Kind cluster, there’s no need to push your image to a remote container registry
+	- You can directly load your local image into your specified Kind cluster:
+```bash
+kind load docker-image <your-image-name>:tag --name <your-kind-cluster-name>
+```
+- To know more, see: [Using Kind For Development Purposes and CI](https://book.kubebuilder.io/reference/kind)
+
+# [RBAC errors](https://book.kubebuilder.io/cronjob-tutorial/running#rbac-errors)
+- If you encounter RBAC errors, 
+	- you may need to grant yourself cluster-admin privileges or be logged in as admin.
+- See [Prerequisites for using Kubernetes RBAC on GKE cluster v1.11.x and older](https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control#iam-rolebinding-bootstrap) which may be your case
+
