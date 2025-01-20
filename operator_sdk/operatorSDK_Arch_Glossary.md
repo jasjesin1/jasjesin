@@ -26,9 +26,12 @@
 	- configurations, as a quick start base for building k8s operators, wid minimal changes; that follows best practices
 
 ---
-- every functional object needs to contain a spec & a status; spec holds desired state, so any inputs to ctrller go here
-	- design our status to hold observed state; this contains info tht we want our users or other ctrllers to obtain
-- Any new fields you add must have json tags for the fields to be serialized.
+**Best Practices**
+- every functional object needs to contain a spec & a status; 
+	- spec holds desired state, so any inputs to ctrller go here
+	- design our status to hold observed state; 
+		- this contains info tht we want our users or other ctrllers to obtain
+- Any new fields you add must have json tags for the fields to be serialized
 	- We can also use the `omitempty` struct tag to mark that a field should be omitted from serialization when empty
 	- use `metav1.Time` instead of `time.Time` to get the stable serialization
 
