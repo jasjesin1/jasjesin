@@ -42,10 +42,10 @@
 		- `batch.tutorial.kubebuilder.io/v1` API group _(implicitly saying it has the Kind `CronJob`)_.
 	- Then, we can later construct a new `&CronJob{}` given some JSON from the API server that says
 ```yaml
-{     
-	"kind": "CronJob",     
-	"apiVersion": "batch.tutorial.kubebuilder.io/v1",     
-	... 
+{
+  "kind": "CronJob",     
+  "apiVersion": "batch.tutorial.kubebuilder.io/v1",     
+  ... 
 }
 ```
 
