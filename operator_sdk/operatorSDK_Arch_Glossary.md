@@ -9,7 +9,8 @@
 - <font style="color:pink"><b>reconciler</b></font> -- implements a fn tht takes reconcile request, containing name & ns of object to reconcile; reconciles object, if needed & returns response
 
 ![kubeBuilder_Architecture](https://github.com/user-attachments/assets/e66fa8a9-43ee-4718-808e-58a1e26115c0)
-**kubeBuilder Architecture:**
+
+**kubeBuilder Architecture**
 
 ---
 - <font style="color:yellow"><b>scheme</b></font> -- provides mappings b/w kinds & associated Go-types, to ctrller
