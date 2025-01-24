@@ -1,6 +1,6 @@
 **Add new node to cluster:**
 - [ ] Commit changes by updating needed AZ, with specific GPU Flavor type [here](https://github.com/cisco-it-cloud-infrastructure/camp-config-nprd/blob/master/camp-rtp-np-01/components/camp-infrastructure.yaml#L124)
-	- [ ] Do this by forking out a feature branch, raising PR & getting it approved by at least 2 ppl
+	- [ ] Do this by forking out a feature branch, raising PR & getting it approved by at least 2 teamies
 - [ ] Run pipeline to get the changes deployed to CaaS repo
 	- [ ] Run this [pipeline](https://eps-jenkins-nprd.cisco.com/view/CAMP/job/Camp_Release_Pipeline_camp-rtp-np-01/build?delay=0sec) by selecting `camp-infrastructure.yaml`
 	- [ ] Rectify CCaaS repo PR URL from build no.'s console output like [this](https://eps-jenkins-nprd.cisco.com/view/CAMP/job/Camp_Release_Pipeline_camp-rtp-np-01/106/console)
