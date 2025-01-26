@@ -14,7 +14,10 @@
 	- DCGM-based monitoring
 
 **How GPU Arch can be enabled for openShift?**
-	![[GPU_Arch_in_openShift.png]]
+	![GPU Arch](./GPU_Arch_in_openShift.png)
+	
+
+
 
 - **GPUs & BareMetal**
 	- Deploy OCP on nvidia-certified BareMetal svc but wid some limitations:
