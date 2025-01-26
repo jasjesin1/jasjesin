@@ -37,95 +37,34 @@
 		- GPU passthrough to access & use GPU h/w within a VM
 		- GPU (vGPU) time-slicing
 
-- **GPU Sharing Methods**
-	- RH & nvidia hv developed GPU concurrency & sharing mechanisms to simplify GPU-accelerated computing on OCP cluster, to overcome GPU under-utilization; thereby, reducing deployment cost & maximize GPU utilization
-	- GPU Concurrency Mechanisms:
-		- ComputeUnifiedDeviceArchitecture (**CUDA**) streams -- within single app
-			- CUDA is a platform for parallel computing & programming model, developed by nvidia, for general computing on GPUs
-			- Stream is a sequence of operations that execute issue-order on GPU
-				- New task doesn't start until preceding task is completed
-			- Async processing of operations across diff. streams helps achieve parallel execution of multiple tasks simultaneously, in no prescribed order, leading to improved performance
-		- CUDA Multi-Process Svc (**MPS**) -- for multiple apps in multi-user environment
-			- allows single GPU  to use multiple CUDA processes to run in parallel on GPU, to eliminate saturation of GPU compute resources
-			- MPS also enables concurrent execution or overlapping, of kernel operations & memory copying from diff. processes to enhance utilization
-			- MPS is a server-client model where the MPS control daemon runs on the server, and multiple client applications connect to it
-			- MPS server manages GPU resources and schedules tasks from different processes, allowing them to share the GPU efficiently
-			- MPS can reduce the overhead associated with context switching between different CUDA processes
-		- **Time-slicing**
-			- Good for older nvidia cards
-			- interleaves workloads, tht r scheduled on overloaded GPU, when multiple CUDA apps r running
-			- time-slicing can b enabled by defining set of replicas for a GPU, each of which can be independently distributed to a pod, to run workloads on.
-				- Example, if a GPU is split into 7 slices, each slice is allocated to an individual pod, making it 7 pods for a single GPU
-			- Thr is no memory or fault isolation b/w replicas, i.e., memory is not sliced/shared, stays same full amount of memory, for each slice
-			- This is used to multiplex workloads from replicas of same underlying GPU
-			- time-slicing can b applied cluster-wide as well as node-specific
-				- We do node-specific slicing, by labeling nodes wid node-specific cfg
-				- This helps provide diff. GPU flavors in the cluster
-		- Multi-instance GPU (**MIG**)
-			- Good for MIG-enabled cards on BareMetal
-			- MIG is only supported with A30, A100, A100X, A800, AX800, H100, and H800
-			- MIG can b used to split GPU compute units & memory, into multiple MIG instances.
-				- Each instance represents a standalone GPU device from a system perspective & can b connected to any app, container or a VM on that node
-				- s/w tht uses GPU, treats each MIG instance as individual GPU
-			- useful wen app doesnt require full power of GPU
-			- nvidia Ampere enables to split h/w resources into multiple GPU instances, wid each instance avl to OS, as an independent CUDA-enabled GPU
-			- GPU instances r designed to support up to 7 independent CUDA apps, tht can operate completely isolated wid dedicated h/w resources
-		- Virtualization wid **vGPU**
-			- Best choice for VMs
-			- VMs can directly access a single GPU by using nvidia vGPU
-			- vGPUs can b created n shared by multiple VMs across the enterprise & can b accessed by other devices
-				- This capability helps combine power of GPU performance wid mgmt & security benefits, provided by vGPU, along with 
-					- proactive mgmt & monitoring of VM environment, 
-					- workload balancing for mixed VDI & compute workloads, 
-					- resource sharing across multiple VMs
-	- Scenarios & recommendations:
-		- VMs wid multiple GPUs, using passthrough & vGPU
-			- Use separate VMs
-		- BareMetal wid openShift Virtualization & multiple GPUs
-			- Use pass-through for hosted VMs &
-			- time-slicing for containers
+- **GPU Sharing Methods** -- _GPU Concurrency Mechanisms_
+
+| CUDA Streams                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | CUDS MPS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Time-Slicing                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | MIG                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | vGPU                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ComputeUnifiedDeviceArchitecture (**CUDA**) streams -- _within single app_<br>- CUDA is a platform for parallel computing & programming model, developed by nvidia, for general computing on GPUs<br>- Stream is a sequence of operations that execute issue-order on GPU<br>	- New task doesn't start until preceding task is completed<br>- Async processing of operations across diff. streams helps achieve parallel execution of multiple tasks simultaneously, in no prescribed order, leading to improved performance | - CUDA Multi-Process Svc (**MPS**) -- _for multiple apps in multi-user environment_<br>- allows single GPU  to use multiple CUDA processes to run in parallel on GPU, to eliminate saturation of GPU compute resources<br>- MPS also enables concurrent execution or overlapping, of kernel operations & memory copying from diff. processes to enhance utilization<br>- MPS is a server-client model where the MPS control daemon runs on the server, and multiple client applications connect to it<br>- MPS server manages GPU resources and schedules tasks from different processes, allowing them to share the GPU efficiently<br>- MPS can reduce the overhead associated with context switching between different CUDA processes | Good for older nvidia cards<br>- interleaves workloads, tht r scheduled on overloaded GPU, when multiple CUDA apps r running<br>- time-slicing can b enabled by defining set of replicas for a GPU, each of which can be independently distributed to a pod, to run workloads on.<br>	- Example, if a GPU is split into 7 slices, each slice is allocated to an individual pod, making it 7 pods for a single GPU<br>- Thr is no memory or fault isolation b/w replicas, i.e., memory is not sliced/shared, stays same full amount of memory, for each slice<br>- This is used to multiplex workloads from replicas of same underlying GPU<br>- time-slicing can b applied cluster-wide as well as node-specific<br>	- We do node-specific slicing, by labeling nodes wid node-specific cfg<br>	- This helps provide diff. GPU flavors in the cluster | Good for MIG-enabled cards on BareMetal<br>- MIG is only supported with A30, A100, A100X, A800, AX800, H100, and H800<br>- MIG can b used to split GPU compute units & memory, into multiple MIG instances.<br>	- Each instance represents a standalone GPU device from a system perspective & can b connected to any app, container or a VM on that node<br>	- s/w tht uses GPU, treats each MIG instance as individual GPU<br>- useful wen app doesnt require full power of GPU<br>- nvidia Ampere enables to split h/w resources into multiple GPU instances, wid each instance avl to OS, as an independent CUDA-enabled GPU<br>- GPU instances r designed to support up to 7 independent CUDA apps, tht can operate completely isolated wid dedicated h/w resources | Best choice for VMs<br>- VMs can directly access a single GPU by using nvidia vGPU<br>- vGPUs can b created n shared by multiple VMs across the enterprise & can b accessed by other devices<br>	- This capability helps combine power of GPU performance wid mgmt & security benefits, provided by vGPU, along with <br>		- proactive mgmt & monitoring of VM environment, <br>		- workload balancing for mixed VDI & compute workloads, <br>		- resource sharing across multiple VMs |
 
 
 
-**Key Differences**
-**• Scope**:
-	**• CUDA Streams**: Operate within a single process, allowing that process to manage multiple streams of execution on the GPU
-	**• CUDA MPS**: Operates across multiple processes, enabling them to share the GPU resources concurrently
-**• Level of Concurrency**:
-	**• CUDA Streams**: Manage concurrency at the task level within a single application
-	**• CUDA MPS**: Manages concurrency at the application level, allowing multiple processes to run simultaneously
-**• Use Cases**:
-	**• CUDA Streams**: Useful for optimizing the performance of a single application by managing internal concurrency
-	**• CUDA MPS**: Useful for multi-user or multi-application environments where GPU resources need to be shared
+**Scenarios & recommendations:**
+
+| Scenario                                               | Recommendation                                                       |
+| ------------------------------------------------------ | -------------------------------------------------------------------- |
+| VMs wid multiple GPUs, using passthrough & vGPU        | Use separate VMs                                                     |
+| BareMetal wid openShift Virtualization & multiple GPUs | - Use pass-through for hosted VMs &<br>- time-slicing for containers |
+
+
+**CUDA Streams vs MPS: Key Differences**
+
+| S.No. | Criteria        | Streams                                                                                                        | MPS                                                                                                 |
+| ----- | --------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 1.    | Scope           | Operates within a **single process**, allowing that process to manage multiple streams of execution on the GPU | Operates across **multiple processes**, enabling them to share the GPU resources concurrently       |
+| 2.    | Concurrency Lvl | Manage concurrency at the **task level** within a single app                                                   | Manages concurrency at the **application level**, allowing multiple processes to run simultaneously |
+| 3.    | Use Cases       | Useful for optimizing the performance of a single application by managing internal concurrency                 | Useful for multi-user or multi-application environments where GPU resources need to be shared       |
+
 
 
 **nvidia GPU features for OCP**
-- **Container Toolkit** -- for containers only
-	- helps create & run GPU-accelerated containers
-	- includes container runtime library & utilities to automatically configure containers to use GPUs
-- **AI Enterprise**
-	- E2E cloud-native suite of AI & data analytics s/w tht is optimized, certified & supported wid nvidia-certified systems
-	- includes support for OCP towards following installation methods
-		- OCP on BareMetal
-		- OCP on VMware vSphere wid nvidia GPU or GPU passthrough 
-- **GPU Feature DIscovery (GFD)** -- for containers only
-	- s/w component tht enables automatic generation of labels for GPUs, avl on a node
-		- uses NodeFeatureDiscovery(NFD) to perform this labeling
-			- NFD Operator is avl in operatorHub as **Node Feature Discovery**
-	- manages discovery of h/w features & cfgs in OCP cluster by labeling nodes wid h/w-specific info
-	- labels host wid node-specific attributes like
-		- PCI card
-		- kernel
-		- OS version etc
-	- Till here, GPU Operator only provisions worker nodes to run GPU-accelerated containers
-- **GPU Operator wid openShift Virtualization**
-	- used for provisioning worker nodes for running GPU-accelerated VMs
-	- can configure GPU Operator to deploy diff. s/w components to worker nodes, depending GPU workload, configured to run on those nodes
-- **GPU Monitoring Dashboard**
-	- install it to display GPU usage info on cluster **Observe** tab in OCP console
-	- displays
-		- no. of avl GPUs
-		- power consumption (in watts)
-		- temperature (in degree Celcius)
-		- utilization (in %)
-		- other metrics, for each GPU
+
+| Container Toolkit                                                                                                                                   | GFD                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | DCGM                                                                                                                                                                                                                                                   | OS Virt                                                                                                                                                                                                     | AI Enterprise                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| helps create & run GPU-accelerated containers<br>- includes container runtime library & utilities to automatically configure containers to use GPUs | s/w component tht enables automatic generation of labels for GPUs, avl on a node<br>	- uses NodeFeatureDiscovery(NFD) to perform this labeling<br>		- NFD Operator is avl in operatorHub as **Node Feature Discovery**<br>- manages discovery of h/w features & cfgs in OCP cluster by labeling nodes wid h/w-specific info<br>- labels host wid node-specific attributes like<br>	- PCI card<br>	- kernel<br>	- OS version etc<br>- Till here, GPU Operator only provisions worker nodes to run GPU-accelerated containers | install it to display GPU usage info on cluster **Observe** tab in OCP console<br>- displays<br>	- no. of avl GPUs<br>	- power consumption (in watts)<br>	- temperature (in degree Celcius)<br>	- utilization (in %)<br>	- other metrics, for each GPU | used for provisioning worker nodes for running GPU-accelerated VMs<br>- can configure GPU Operator to deploy diff. s/w components to worker nodes, depending GPU workload, configured to run on those nodes | E2E cloud-native suite of AI & data analytics s/w tht is optimized, certified & supported wid nvidia-certified systems<br>- includes support for OCP towards following installation methods<br>	- OCP on BareMetal<br>	- OCP on VMware vSphere wid nvidia GPU or GPU passthrough |
