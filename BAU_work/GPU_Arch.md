@@ -1,18 +1,20 @@
+**OCP**
+- security-focused & hardened k8s platform, _developed & supported by RH,_ for deploying & managing k8s clusters @ scale
+
 **GPU Arch**
-- nvidia supports use of GPU on OCP
-- OCP is security-focused & hardened k8s platform, developed & supported by RH, for deploying & managing k8s clusters @ scale
-- nvidia GPU Operator uses Operator f/w inside OCP to manage full LC of nvidia s/w components, tht r reqd to run GPU-accelerated workloads
-	- These s/w components include
-		- nvidia drivers to enable CUDA
-		- k8s device plugin for GPUs
-		- nvidia Container Toolkit
-		- automatic node tagging using GPU Feature Discovery (GFD)
-			- NodeFeatureDiscovery (NFD) Operator should be installed &
+- GPU Operator uses Operator f/w inside OCP to manage full LC of its s/w components, tht r reqd to run GPU-accelerated workloads
+- These s/w components include
+	- nvidia drivers to enable CUDA
+	- k8s device plugin for GPUs
+	- nvidia Container Toolkit
+	- automatic node tagging using GPU Feature Discovery (**GFD**)
+		- For this to work, 
+			- NodeFeatureDiscovery (**NFD**) Operator should be installed &
 			- `nodefeaturediscovery` instance should be created
-		- DCGM-based monitoring
+	- DCGM-based monitoring
 
 **How GPU Arch can be enabled for openShift?**
-![[GPU_Arch_in_openShift.png]]
+	![[GPU_Arch_in_openShift.png]]
 
 - **GPUs & BareMetal**
 	- Deploy OCP on nvidia-certified BareMetal svc but wid some limitations:
@@ -95,13 +97,32 @@
 
 
 **nvidia GPU features for OCP**
-- **Container Toolkit**
-	- 
+- **Container Toolkit** -- for containers only
+	- helps create & run GPU-accelerated containers
+	- includes container runtime library & utilities to automatically configure containers to use GPUs
 - **AI Enterprise**
-	- 
-- **GPU Feature DIscovery (GFD)**
-	- 
+	- E2E cloud-native suite of AI & data analytics s/w tht is optimized, certified & supported wid nvidia-certified systems
+	- includes support for OCP towards following installation methods
+		- OCP on BareMetal
+		- OCP on VMware vSphere wid nvidia GPU or GPU passthrough 
+- **GPU Feature DIscovery (GFD)** -- for containers only
+	- s/w component tht enables automatic generation of labels for GPUs, avl on a node
+		- uses NodeFeatureDiscovery(NFD) to perform this labeling
+			- NFD Operator is avl in operatorHub as **Node Feature Discovery**
+	- manages discovery of h/w features & cfgs in OCP cluster by labeling nodes wid h/w-specific info
+	- labels host wid node-specific attributes like
+		- PCI card
+		- kernel
+		- OS version etc
+	- Till here, GPU Operator only provisions worker nodes to run GPU-accelerated containers
 - **GPU Operator wid openShift Virtualization**
-	- 
+	- used for provisioning worker nodes for running GPU-accelerated VMs
+	- can configure GPU Operator to deploy diff. s/w components to worker nodes, depending GPU workload, configured to run on those nodes
 - **GPU Monitoring Dashboard**
-	- 
+	- install it to display GPU usage info on cluster **Observe** tab in OCP console
+	- displays
+		- no. of avl GPUs
+		- power consumption (in watts)
+		- temperature (in degree Celcius)
+		- utilization (in %)
+		- other metrics, for each GPU
