@@ -1,4 +1,4 @@
-Multi-instance GPU
+**Multi-instance GPU**
 - This feature was first introduced with the NVIDIA® Ampere architecture
 - allows GPUs to be securely partitioned into up to seven separate GPU Instances for CUDA applications, providing multiple users with separate GPU resources for optimal GPU utilization
 - beneficial for workloads that do not fully saturate the GPU’s compute capacity 
