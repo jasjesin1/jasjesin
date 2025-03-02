@@ -118,20 +118,56 @@
 	- Gateway just knows that on what host n what port, should u listen to the traffic, with what kind of protocol
 		- And if protocol is HTTPS, then what is the TLS cert
 		- GW tells only this much
-	- VS has info that 
+	- VS has info that  *(execute `ocd vs jas-wb1-jas-poc.rtp-dev-01.cisco.com-default -n caeai-ingress-igw` to understand details)*
 		- this VS should be on effect on this GW
-			- This GW is same name as that of GW object, thats how this VS ties in wid this GW
+			- This GW name `jas-wb1-jas-poc--default` in `Spec.Gateways.caeai-ingress-igw/jas-wb1-jas-poc--default` is the same name as that of 
+				- GW object name *(check **Name:** in `ocd gw jas-wb1-jas-poc--default -n caeai-ingress-igw`)* 
+			- Thats how this VS `jas-wb1-jas-poc.rtp-dev-01.cisco.com-default` ties in wid this GW `jas-wb1-jas-poc--default`
 			- for this host, these r the things that should be done, like
 				- removing certain headers
 				- anything that is matching wid `/`, send that to this destination clusterIP svc
 
+```json
+Name:         jas-wb1-jas-poc.rtp-dev-01.cisco.com-default
+Namespace:    caeai-ingress-igw
+Labels:       namespace=jas-poc
+              sso=default
+Annotations:  host: jas-wb1-jas-poc.rtp-dev-01.cisco.com
+API Version:  networking.istio.io/v1beta1
+Kind:         VirtualService
+Metadata:
+  Finalizers:
+    istio-ingress-operator/finalizer
+Spec:
+  Gateways:
+    caeai-ingress-igw/jas-wb1-jas-poc--default
+```
+
 - **DestinationRule:**
-	- defines protocol (HTTP/HTTP2/HTTPS) TLS or TCP svc
+	- defines protocol to inform if connectivity from `default-igw` to app's internal clusterIP `svc.cluster.local` is plain HTTP or (HTTP2/TCP/TLS) svc
+		- Check `ocd dr jas-wb1-jas-poc.rtp-dev-01.cisco.com-jas-wb1-tls-443` for details
+		- This internal svc name of app is specified as `destination` in VS
 	- specifies port no.
 
 - based on all this knowledge now, `default-igw` knows that wenevr traffic for a specific URL comes, it needs to be routed to a specific ns
-- usually ns2ns communication is not allowed in multi-tenancy
-	- so, netpol needs to be setup to allow ns2ns communication
-		- For each ns, netpol needs to be setup that allows from all ns that has this specific label selector `network.openshift.io/policy-group=ingress` 
-		- This label is set for `caeai-ingress-igw` ns
-- So, this was the traffic flow for a simple notebook
+
+- **netpol:**
+	- usually ns2ns communication is not allowed in multi-tenancy
+		- so, netpol needs to be setup to allow ns2ns communication
+			- Execute `ocd netpol allow-from-openshift-ingress -n jas-poc` for more details
+			- For each ns, netpol needs to be setup, that allows from all ns that has this specific label selector `NamespaceSelector: network.openshift.io/policy-group=ingress` 
+			- This label is set for `caeai-ingress-igw` ns as one of the few ns that hv full-blown access to client ns
+				- Execute `ocg ns -l network.openshift.io/policy-group=ingress` to see list of all ns that have full-blown access to all client ns
+	- So, this was the traffic flow for a simple notebook
+
+```json
+ocg ns -l network.openshift.io/policy-group=ingress                                                                                                                    
+	NAME                      STATUS   AGE
+	caeai-ingress-igw         Active   145d
+	caeai-ingress-system      Active   145d
+	istio-system              Active   146d
+	knative-serving           Active   38d
+	openshift-host-network    Active   146d
+	openshift-ingress         Active   146d
+	redhat-ods-applications   Active   130d
+```
