@@ -25,3 +25,8 @@
 	- Model svr shouldn't run that model wen not in use; for cost savings
 - Single models do not need to run continuously, can be scaled up n down; 
 	- by leveraging KServe, that internally uses KNative _(serverless platform)_ under the hood, for autoscaling
+
+- **Single Model** consists of
+	- **KServe**
+	- RHOS **Serverless _(KNative)**_
+	- RHOS **Svc Mesh _(Istio)**_
