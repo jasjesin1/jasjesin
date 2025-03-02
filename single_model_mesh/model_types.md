@@ -1,10 +1,10 @@
 **Multi-model**
 
 - uses RHODS AI Operator, that uses open-src **opendatahub-operator** _(this is actually the AI Operator)_ under the hood
-	- [opendatahub-operator][https://github.com/opendatahub-io/opendatahub-operator]
-	- [opendatahub][https://github.com/opendatahub-io]
-	- [modelmesh-runtime-adapter][https://github.com/opendatahub-io/modelmesh-runtime-adapter]
-		- [modelmesh-serving][https://github.com/kserve/modelmesh-serving]
+	- [opendatahub-operator](https://github.com/opendatahub-io/opendatahub-operator)
+	- [opendatahub](https://github.com/opendatahub-io)
+	- [modelmesh-runtime-adapter](https://github.com/opendatahub-io/modelmesh-runtime-adapter)
+		- [modelmesh-serving](https://github.com/kserve/modelmesh-serving)
 - AI Operator deploys models by setting up a Model Svr 1st
 	- In that model svr, we deploy a model, by giving S3 path whr model is stored
 - Its called **multi-model** cuz tht model svr can run multiple models @ same time

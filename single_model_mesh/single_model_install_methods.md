@@ -24,12 +24,12 @@
 
 **Manual Install**
 
-- AI Operator understands install type, based on the annotation that we set as managed, unmanaged or removed @ [camp-infrastructure.yaml][https://github.com/cisco-it-cloud-infrastructure/camp-config-dev/blob/master/camp-rtp-dev-01/components/camp-infrastructure.yaml#L196-L214]
+- AI Operator understands install type, based on the annotation that we set as managed, unmanaged or removed @ [camp-infrastructure.yaml](https://github.com/cisco-it-cloud-infrastructure/camp-config-dev/blob/master/camp-rtp-dev-01/components/camp-infrastructure.yaml#L196-L214)
 	- **Unmanaged**: informs that we install the components _(KNative & Istio)_ & manage their LC, cfg updates etc
 	- **Removed**: operator makes sure that specific components, set to Removed, are uninstalled & not consuming any resources
 - Extra layer of serverless is also created, that does that actual installation of KNative
 	- So, if those serverless variables r not defined, knative is not installed
-- Go thru manual steps specified @ [RH Single Model][https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.8/html/serving_models/serving-large-models_serving-large-models#manually-installing-kserve_serving-large-models]
+- Go thru manual steps specified @ [RH Single Model](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.8/html/serving_models/serving-large-models_serving-large-models#manually-installing-kserve_serving-large-models)
 	- **Step 1** is to create SvcMesh/Istio, which we alrdy installed
 	- **Step 2** is to create Serverless/KNative Serving instance
 	- **Step 3** is to do extra cfg of KNative to talk to other svcs
@@ -43,7 +43,7 @@
 - **KNative** install documentation is also written in such a way, assuming that istio system is automatically installed in default ns
 	- So, thrs bunch of cfgs here, which they don't mention, that if it is written in a diff. ns, u should add that cfg
 	- So, to understand all those missing pieces, open-src documentation had to be referred
-		- Go thru KNative open-src documentation @ [KNative][https://knative.dev/docs/serving/]
+		- Go thru KNative open-src documentation @ [KNative](https://knative.dev/docs/serving/)
 			- and understand how they suggest to install istio svc mesh
 			- their examples have been used in our code
 	- open-src is much better documentation than wht is present in RH one

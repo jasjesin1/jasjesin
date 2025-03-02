@@ -76,7 +76,7 @@
 			- This cert contains TLS Cert `tls.crt` wid `tls.key`
 			- Then, execute `oc view-secret jas-wb1-jas-poc.rtp-dev-01.cisco.com -n caeai-ingress-igw -a`
 				- This gives the CSR in proper format
-			- To validate details, copy paste the secret in Certificate Decoder @ https://sslshopper.com/certificate-decoder.html _(if its non-sensitive)_
+			- To validate details, copy paste the secret in [Certificate Decoder](https://sslshopper.com/certificate-decoder.html) _(if cert non-sensitive)_
 - Who writes this cert?
 	- As soon as we hv route object created, we hv to fetch the TLS cert
 	- `cert-manager` running on the cluster, is configured in such a way that within Cisco; Cisco has its own private SSL Cert provider, that also implements ACME protocol
