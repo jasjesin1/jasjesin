@@ -2,7 +2,7 @@
 
 - **Documentation**
 	- **KServe**
-		- [RH-specific Single Model][https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.8/html/serving_models/serving-large-models_serving-large-models]
+		- [RH-specific Single Model](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.8/html/serving_models/serving-large-models_serving-large-models)
 		- [open-src specific KServe][https://github.com/kserve/kserve]
 		- [KServe main site][https://kserve.github.io/website/latest/]
 	- **KNative**
