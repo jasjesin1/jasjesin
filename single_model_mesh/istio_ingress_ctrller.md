@@ -93,13 +93,17 @@
 		- fetches the TLS cert from internal SSL Cert provider (CA) &
 		- eventually will generate the secret reqd _(this secret is referenced in the GW)_, 
 			- This secret is needed by GW for TLS termination
-- For each cert tht cert-manager creates, equivalent CSR is also generated, wid issuer being `cisco-acme`
+- For each cert object created by Istio Ingress Ctrller, cert-manager creates an equivalent `certificatesrequests` object in `caeai-ingress-igw` ns 
+	- with CSR generated & stored in it, wid issuer being `cisco-acme`
 - Explore more abt diff. objects avl for certs by executing `oc api-resources | grep cert`, to understand how these r inter-connected
-	- Execute 
+	- Validate CSR by executing `ocd certificaterequests jas-wb1-jas-poc.rtp-dev-01.cisco.com-default-1 -n caeai-ingress-igw` 
 - **Summary:**
 	- Once Istio Ingress Operator creates a cert object, 
 		- cert-manager ctrller, that watches creation of a cert object, gets notified and
-			- reads details from cert object related to hostname & generates CSR ??
+			- reads details from cert object related to hostname & 
+			- generates CSR
+			- creates `certificaterequests` object in `caeai-ingress-igw` ns & 
+				- stores generated CSR in this object, with issuer being `cisco-acme`
 			- connects to SSL Certs CA to request the CSR to be signed 
 			- SSL Certs CA  
 				- performs DNS lookup to validate is provided hostname resolves to an IP
