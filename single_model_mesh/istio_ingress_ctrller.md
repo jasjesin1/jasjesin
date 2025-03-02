@@ -104,7 +104,7 @@
 					- performs DNS lookup to validate is provided hostname resolves to an IP
 					- if provided hostname resolves to an IP, then SSL Certs CA signs CSR
 					- sends back signed CSR
-			- stores signed CSR in a secret in vault / secret store (secrets.cisco.com ??)
+			- stores signed CSR in a secret in vault / secret store (keeper.cisco.com ??)
 			- provides secret name to GW object, for it to run successfully
 
 ![SSL Cert Generation](images/Cert_Generation.png)
