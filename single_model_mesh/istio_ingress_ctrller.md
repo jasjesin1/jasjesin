@@ -29,7 +29,7 @@
 	- Istio Ingress Ctrller creates new GW Object, by setting apiVersion of Istio, making it store in IstioD
 	- envoy proxy in default-igw pod, polls/pulls this cfg from IstioD
 
-![Gateway Object Creation][images/GatewayObjectCreation.png]
+![Gateway Object Creation](images/GatewayObjectCreation.png)
 
 **Custom Resources for svcMesh**
 - These r pieces of extra code on top of IstioD to simplify certain processes
@@ -67,7 +67,7 @@
 				- request new IP by requesting ESP SvcNow to request creation of new IP via infoblox IPAM, 
 				- get it registered in DNS, by Infoblox and then 
 				- add that IP in same DNS as that of GW svc's external IP, i.e., FIP
-![IP Provision and Registration in DNS][images/DNS_IP_Registration.png]
+![IP Provision and Registration in DNS](images/DNS_IP_Registration.png)
 
 **Certificates:**
 - Now to make the GW run, we need SSL cert, stored in same `caeai-ingress-igw` ns
@@ -107,7 +107,7 @@
 			- stores signed CSR in a secret in vault / secret store (secrets.cisco.com ??)
 			- provides secret name to GW object, for it to run successfully
 
-![SSL Cert Generation][images/Cert_generation.png]
+![SSL Cert Generation](images/Cert_generation.png)
 
 - **VirtualService:**
 	- Gateway just knows that on what host n what port, should u listen to the traffic, with what kind of protocol
