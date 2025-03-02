@@ -107,7 +107,7 @@
 			- stores signed CSR in a secret in vault / secret store (secrets.cisco.com ??)
 			- provides secret name to GW object, for it to run successfully
 
-![SSL Cert Generation](images/Cert_generation.png)
+![SSL Cert Generation](images/Cert_Generation.png)
 
 - **VirtualService:**
 	- Gateway just knows that on what host n what port, should u listen to the traffic, with what kind of protocol
