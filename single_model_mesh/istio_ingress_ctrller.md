@@ -95,8 +95,35 @@
 			- This secret is needed by GW for TLS termination
 - For each cert object created by Istio Ingress Ctrller, cert-manager creates an equivalent `certificatesrequests` object in `caeai-ingress-igw` ns 
 	- with CSR generated & stored in it, wid issuer being `cisco-acme`
+		- Validate CSR by executing `ocd certificaterequests jas-wb1-jas-poc.rtp-dev-01.cisco.com-default-1 -n caeai-ingress-igw` 
+			- `ocg certificaterequests jas-wb1-jas-poc.rtp-dev-01.cisco.com-default-1 -n caeai-ingress-igw -oyaml`
+- How to perform cert validation?
+- `ocg certificaterequests jas-wb1-jas-poc.rtp-dev-01.cisco.com-default-1 -n caeai-ingress-igw -oyaml`
+	- Take the status value of certificaterequests object
+		- Base64 decode it by executing `echo "<statusValue>" | base64 --decode`
+			- This will give 3 certs
+				- main cert for your workbench
+				- CA cert by HydrantID Server CA O1
+				- Root Cert by IdenTrust Commercial Root CA 1
+		- Pick the 1st base64-decoded cert and type it in [Cert Decoder Tool](https://www.sslshopper.com/certificate-decoder.html)
+			- This will provide following cert details >>
+```json
+Certificate Information:
+	Common Name: istio-ingress-operator.it.cisco.com
+	Subject Alternative Names: istio-ingress-operator.it.cisco.com, jas-wb1-jas-poc.rtp-dev-01.cisco.com
+	Organization: Cisco Systems Inc.
+	Organization Unit:
+		Locality: San Jose
+		State: California
+		Country: US
+	Valid From: October 29, 2024
+	Valid To: October 29, 2025
+	Issuer: HydrantID Server CA O1, IdenTrust 
+	Key Size: 4096 bit
+	Serial Number: 400192da76b16a2e3c1d5328e8ba75eb
+```
 - Explore more abt diff. objects avl for certs by executing `oc api-resources | grep cert`, to understand how these r inter-connected
-	- Validate CSR by executing `ocd certificaterequests jas-wb1-jas-poc.rtp-dev-01.cisco.com-default-1 -n caeai-ingress-igw` 
+
 - **Summary:**
 	- Once Istio Ingress Operator creates a cert object, 
 		- cert-manager ctrller, that watches creation of a cert object, gets notified and
